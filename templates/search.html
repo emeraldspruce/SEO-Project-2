@@ -6,4 +6,11 @@
 {% block body %}
 <h1>Welcome to the Search Page</h1>
 <p>This is the content of the search page.</p>
+<ul>
+  {% for movie in movies %}
+    <li>
+      <a href="{{ url_for('movie_detail', movie_id=movie.id) }}">{{ movie.title }}</a>
+    </li>
+  {% endfor %}
+</ul>
 {% endblock %}
