@@ -5,11 +5,11 @@ import os
 import requests
 import json
 
+
 app = Flask(__name__)
 load_dotenv()
 
 search_client = None
-genre_map = {}
 movies = []
 
 
@@ -17,7 +17,7 @@ movies = []
 def init_app():
     global search_client, genre_map
     search_client = TMDBClient()
-    genre_map = search_client.fetch_genres()
+    search_client.fetch_genres()
 
 
 @app.route("/")
@@ -46,7 +46,7 @@ def movie_detail(movie_id):
     movie = next((m for m in movies if m["id"] == movie_id), None)
     if movie is None:
         abort(404)
-    movie["genre_names"] = [genre_map.get(id, "Unknown") for id in movie.get("genre_ids", [])]
+    movie["genre_names"] = search_client.genre_ids_to_names(movie.get("genre_ids", []))
     return render_template("movie_detail.html", movie=movie)
 
 

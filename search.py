@@ -4,6 +4,7 @@ from urllib.parse import quote
 from dotenv import load_dotenv
 import os
 
+
 class TMDBClient:
     def __init__(self, api_key=None, language="en-US", include_adult=False):
         # Get API key
@@ -20,7 +21,9 @@ class TMDBClient:
             "Authorization": f"Bearer {self.api_key}"
         }
 
+
     def search_movies(self, title, year=None, page=1, get_all_pages=False, max_results=1000):
+        '''Used TMDB's search endpoint to find movies by title.'''
         query = quote(title)
         results = []
 
@@ -60,7 +63,9 @@ class TMDBClient:
         print(f"Found {total_results} total results across {total_pages} pages. Fetched {len(results)} results.")
         return results
 
+
     def discover_movies(self, sort_by="popularity.desc", year=None, page=1):
+        '''Used TMDB's discover endpoint to get a list of current poopular movies.'''
         url = f"{self.base_url}/discover/movie?sort_by={sort_by}&include_adult={self.include_adult}&language={self.language}&page={page}"
         if year is not None:
             url += f"&primary_release_year={year}"
@@ -74,16 +79,26 @@ class TMDBClient:
         data = response.json()
         return data.get("results", [])
 
+
     def fetch_genres(self):
+        '''Fetches the list of movie genres from TMDB and stores them in a dictionary.'''
         url = f"{self.base_url}/genre/movie/list?language={self.language}"
         response = requests.get(url, headers=self.headers)
+        self.genre_map = {}
 
         if response.status_code == 200:
             data = response.json()
-            return {genre['id']: genre['name'] for genre in data.get('genres', [])}
+            self.genre_map = {genre['id']: genre['name'] for genre in data.get('genres', [])}
         else:
             print(f"Error fetching genres: {response.status_code}")
-            return {}
+
+
+    def genre_ids_to_names(self, genre_ids):
+        '''Convert a list of genre IDs to their names using the genre_map.'''
+        if not hasattr(self, 'genre_map'):
+            self.fetch_genres()
+        return [self.genre_map.get(genre_id, "Unknown") for genre_id in genre_ids]
+
 
     def save_to_file(self, results, filename="movies.json"):
         '''The intent of this function is to serve as a debug tool to save on API calls.'''
