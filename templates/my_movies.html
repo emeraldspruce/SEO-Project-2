@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block title %}My Movies{% endblock %}
+{% set active = 'my_movies' %}
+
+{% block body %}
+<h1>Welcome to the Movies Page</h1>
+<p>This is the content of the second page.</p>
+<ul>
+  {% for movie in movies %}
+    <li>
+      <a href="{{ url_for('movie_detail', movie_id=movie.id) }}">{{ movie.title }}</a>
+    </li>
+  {% endfor %}
+</ul>
+{% endblock %}

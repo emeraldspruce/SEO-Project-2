@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+
+{% block title %}First{% endblock %}
+
+{% block body %}
+<h1>{{ movie.title }}</h1>
+<p><strong>Rating:</strong> {{ movie.rating }}</p>
+<p><strong>Summary:</strong> {{ movie.summary }}</p>
+{% endblock %}

@@ -12,9 +12,9 @@
     <header>
         <nav class="navbar" id="navbar">
             <div class="navbar-spacer"></div>
-            <a href="{{ url_for('first') }}" class="nav-link {% if active == 'first' %}active{% endif %}">First</a>
-            <a href="{{ url_for('second') }}" class="nav-link {% if active == 'second' %}active{% endif %}">Second</a>
-            <a href="{{ url_for('third') }}" class="nav-link {% if active == 'third' %}active{% endif %}">Third</a>
+            <a href="{{ url_for('search') }}" class="nav-link {% if active == 'first' %}active{% endif %}">Search</a>
+            <a href="{{ url_for('my_movies') }}" class="nav-link {% if active == 'my_movies' %}active{% endif %}">Saved Movies</a>
+            <a href="{{ url_for('watched') }}" class="nav-link {% if active == 'watched' %}active{% endif %}">Watched</a>
             <div class="navbar-spacer"></div>
             <img src="{{ url_for('static', filename='images/Default-Avatar.png') }}" alt="Profile Pic" style="height:50px;width:50px;border-radius:50%;">
         </nav>

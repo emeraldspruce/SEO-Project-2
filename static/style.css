@@ -6,7 +6,7 @@
     left: 50%;
     transform: translateX(-50%);
     padding: 0.5rem 1rem;
-    background-color: #30719d;
+    background-color: #1a1a1a;
     z-index: 1000;
     display: flex;
     gap: 2rem; /* space between nav links */
@@ -28,7 +28,7 @@
 }
 
 .nav-link {
-    color: white;
+    color: rgb(255, 0, 0);
     text-decoration: none;
     font-size: 1.2rem;
     padding: 0.5rem 1rem;
@@ -36,13 +36,13 @@
 }
 
 .nav-link.active {
-    background-color: #1a4d6f; /* darker shade for active link */
-    color: #e0f7fa; /* light color for contrast */
+    background-color: #2d2d2d; /* darker shade for active link */
+    color: #ff3838; /* light color for contrast */
 }
 
 .nav-link:hover {
-    background-color: #1a4d6f; /* darker shade on hover */
-    color: #e0f7fa; /* light color for contrast */
+    background-color: #2d2d2d; /* darker shade on hover */
+    color: #ff3838; /* light color for contrast */
 }
 
 html {
