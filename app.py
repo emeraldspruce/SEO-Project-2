@@ -17,23 +17,15 @@ movies = []
 
 # Run once at the start to fetch data from TMDB API
 def init_app():
-    global search_client
+    global search_client, database
 
+    # Initialize the database
+    database = database.MovieRankerDB()
+
+    # Initialize the TMDB client with the API key from environment variables
     api_key = os.getenv("TMDB_API_KEY")
     search_client = TMDBClient(api_key=api_key)
-    search_client.fetch_genres()
-    # Run the initialization of the database to create tables if they don't exist
-    database.init_db()
 
-def add_movie(user_id,imdb_id,rating,title):
-    conn = sqlite3.connect('movie_ranker.db')
-    cursor = conn.cursor()
-    #could add try except to check if the movie already exists
-    cursor.execute('''
-    INSERT INTO movies_list (user_id, imdb_id, rating, title)
-    VALUES (?, ?, ?, ?)
-    ''', (user_id, imdb_id, rating, title))
-    conn.commit()
 
 @app.route("/")
 def search():
@@ -55,6 +47,7 @@ def my_movies():
 
 @app.route("/watched.html")
 def watched():
+    global database
     return render_template("watched.html")
 
 
