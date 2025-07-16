@@ -1,6 +1,7 @@
 from flask import Flask, render_template, abort, request
 from dotenv import load_dotenv
 from search import TMDBClient
+import database
 import os
 import requests
 import json
@@ -16,11 +17,13 @@ movies = []
 
 # Run once at the start to fetch data from TMDB API
 def init_app():
-    global search_client, genre_map
+    global search_client
 
     api_key = os.getenv("TMDB_API_KEY")
     search_client = TMDBClient(api_key=api_key)
     search_client.fetch_genres()
+    # Run the initialization of the database to create tables if they don't exist
+    database.init_db()
 
 def add_movie(user_id,imdb_id,rating,title):
     conn = sqlite3.connect('movie_ranker.db')
