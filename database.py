@@ -63,6 +63,7 @@ class MovieRankerDB:
         return self.cursor.lastrowid
 
     def add_movie(self, movie_data):
+        self.add_genres(movie_data['id'], movie_data.get('genre_ids', []))
         self.cursor.execute("""
         INSERT OR IGNORE INTO movies (id, adult, backdrop_path, poster_path, original_language, title, overview, release_date, vote_average, vote_count, popularity)
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
@@ -88,7 +89,7 @@ class MovieRankerDB:
         """, (user_name, movie_id, rating))
         self.conn.commit()
 
-    def add_genre_map(self, movie_id, genre_id):
+    def add_genre(self, movie_id, genre_id):
         self.cursor.execute("""
         INSERT OR IGNORE INTO genre_map (movie_id, genre_id)
         VALUES (?, ?)
@@ -97,7 +98,7 @@ class MovieRankerDB:
 
     def add_genres(self, movie_id, genre_ids):
         for genre_id in genre_ids:
-            self.add_genre_map(movie_id, genre_id)
+            self.add_genre(movie_id, genre_id)
 
     def get_user_movies(self, user_name, sort_by="rating", ascending=False):
         sort_fields = {
