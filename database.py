@@ -99,7 +99,20 @@ class MovieRankerDB:
         for genre_id in genre_ids:
             self.add_genre_map(movie_id, genre_id)
 
-    def get_user_movies(self, user_name, ascending=False):
+    def get_user_movies(self, user_name, sort_by="rating", ascending=False):
+        sort_fields = {
+            "rating": "um.rating",
+            "popularity": "m.popularity",
+            "title": "m.title",
+            "vote_average": "m.vote_average",
+            "vote_count": "m.vote_count",
+            "release_date": "m.release_date"
+        }
+
+        sort_column = sort_fields.get(sort_by)
+        if not sort_column:
+            raise ValueError(f"Invalid sort field '{sort_by}'. Must be one of: {', '.join(valid_sort_fields)}")
+
         order = "ASC" if ascending else "DESC"
         self.cursor.execute(f"""
             SELECT m.*, um.rating
@@ -107,7 +120,7 @@ class MovieRankerDB:
             JOIN user_movies um ON u.id = um.user_id
             JOIN movies m ON um.movie_id = m.id
             WHERE u.name = ?
-            ORDER BY um.rating {order}
+            ORDER BY {sort_column} {order}
         """, (user_name,))
         return self.cursor.fetchall()
 
@@ -143,7 +156,7 @@ class MovieRankerDB:
 
     def close(self):
         self.conn.close()
-        
+
     # Debug methods
     def print_all_users(self):
         '''Prints all users to the console.'''
