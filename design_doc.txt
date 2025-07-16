@@ -1,0 +1,17 @@
+Movi: Design Document
+
+This document outlines the design and implementation plan for "Movie Ranker," a web application built with Flask. The primary goal of this project is to create a platform where users can search for movies, view detailed information including trailers, save their favorite movies, and rank them in a personalized list.
+Key Features:
+User identification: Users can simply input their username and be able to log into their account and see past history. 
+Movie Search: Users can search movies and get detailed information on them. 
+Saved Movies: Users can save to their account different movies they watched and give them a score.
+Ranking System: Users can see all the movies they’ve seen and in the order in which they rated them. 
+
+Architecture:
+Database: SQLite database to store users, their saved movies and rankings 
+Backend: Use Flask in order to handle interactions with the database and communications with the API. 
+Frontend: HTML, CSS, and JavaScript.
+
+APIs: 
+Youtube API for showing trailers
+IMdb API for movie info

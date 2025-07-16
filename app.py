@@ -4,6 +4,7 @@ from search import TMDBClient
 import os
 import requests
 import json
+import sqlite3
 
 
 app = Flask(__name__)
@@ -19,6 +20,15 @@ def init_app():
     search_client = TMDBClient()
     search_client.fetch_genres()
 
+def add_movie(user_id,imdb_id,rating,title):
+    conn = sqlite3.connect('movie_ranker.db')
+    cursor = conn.cursor()
+    #could add try except to check if the movie already exists
+    cursor.execute('''
+    INSERT INTO movies_list (user_id, imdb_id, rating, title)
+    VALUES (?, ?, ?, ?)
+    ''', (user_id, imdb_id, rating, title))
+    conn.commit()
 
 @app.route("/")
 def search():
