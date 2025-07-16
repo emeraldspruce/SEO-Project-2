@@ -25,6 +25,8 @@ def init_app():
     # Run the initialization of the database to create tables if they don't exist
     database.init_db()
 
+init_app()
+
 def add_movie(user_id,imdb_id,rating,title):
     conn = sqlite3.connect('movie_ranker.db')
     cursor = conn.cursor()
@@ -70,5 +72,4 @@ def movie_detail(movie_id):
 
 
 if __name__ == "__main__":
-    init_app()
     app.run(debug=True)
