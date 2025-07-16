@@ -1,4 +1,4 @@
-from flask import Flask, render_template, abort
+from flask import Flask, render_template, abort, request
 from dotenv import load_dotenv
 from search import TMDBClient
 import os
@@ -17,7 +17,9 @@ movies = []
 # Run once at the start to fetch data from TMDB API
 def init_app():
     global search_client, genre_map
-    search_client = TMDBClient()
+
+    api_key = os.getenv("TMDB_API_KEY")
+    search_client = TMDBClient(api_key=api_key)
     search_client.fetch_genres()
 
 def add_movie(user_id,imdb_id,rating,title):
@@ -33,8 +35,12 @@ def add_movie(user_id,imdb_id,rating,title):
 @app.route("/")
 def search():
     global movies
-    movies = search_client.discover_movies()
-    return render_template("search.html", movies=movies)
+    query = request.args.get('query')
+    if query:
+        movies = search_client.search_movies(title=query)
+    else:
+        movies = search_client.discover_movies()
+    return render_template("search.html", movies=movies, query=query)
 
 
 @app.route("/my_movies.html")

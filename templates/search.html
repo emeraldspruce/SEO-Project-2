@@ -5,7 +5,18 @@
 
 {% block body %}
 <h1>Welcome to the Search Page</h1>
-<p>This is the content of the search page.</p>
+<p>Search for any movie by title.</p>
+
+<form method="GET" action="/">
+  <input type="text" name="query" placeholder="Search for a movie..." value="{{ query or '' }}">
+  <button type="submit">Search</button>
+  
+  {% if query %}
+    <button type="button" onclick="window.location.href='{{ url_for('search') }}'">Clear</button>
+  {% endif %}
+</form>
+<hr>
+<h2>{% if query %}Search Results for "{{ query }}"{% else %}Popular Movies{% endif %}</h2>
 <ul>
   {% for movie in movies %}
     <li>
