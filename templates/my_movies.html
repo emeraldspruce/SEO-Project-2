@@ -6,6 +6,10 @@
 {% block body %}
 <h1>Welcome to the Movies Page</h1>
 <div class="movie-list">
+{% if not user_name %}<p>You need to login to view saved movies</p>
+{% elif not movies %}<p>No movies saved.</p>
+{% endif %}
+<ul>
   {% for movie in movies %}
   <div class="individual-cards" onclick="window.location.href='{{ url_for('movie_detail', movie_id=movie.id) }}'">
     <img src="https://image.tmdb.org/t/p/w500{{ movie.poster_path }}" alt="Movie poster" class="image">

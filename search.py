@@ -19,6 +19,7 @@ class TMDBClient:
         self.headers = {
             "accept": "application/json"
         }
+        self.fetch_genres()
 
 
     def search_movies(self, title, year=None, page=1, get_all_pages=False, max_results=1000):

@@ -55,6 +55,14 @@
         
         <!-- Additional movie details -->
         <div class="movie-details">
+           <h3>Rate this movie</h3>
+          <form action="{{ url_for('rate_movie', movie_id=movie.id) }}" method="post">
+              <input type="hidden" name="title" value="{{ movie.title }}">
+              <label for="rating">Rating (1-10):</label>
+              <input type="number" step="any" id="rating" name="rating" min="1" max="10" required>
+              <button type="submit">Add to Watched List</button>
+          </form>
+          {% if movie.rating %} <p><strong>Your Rating:</strong> {{ movie.rating }} </p> {% endif %}
             <div class="detail-item">
                 <strong>Genres:</strong> {{ movie.genre_names | join(", ") }}
             </div>
