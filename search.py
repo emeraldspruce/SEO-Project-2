@@ -105,3 +105,22 @@ class TMDBClient:
         with open(filename, "w") as file:
             json.dump(results, file, indent=2)
         print(f"Saved {len(results)} results to {filename}")
+    
+    def get_movie_videos(self, movie_id: int) -> list[dict]:
+        """
+        Fetch YouTube video data (trailers, teasers, etc.) for a specific movie
+        from TMDb, then sort by our type preference.
+        """
+        url = f"{self.base_url}/movie/{movie_id}/videos"
+        params = {"api_key": self.api_key, "language": self.language}
+        resp = requests.get(url, headers=self.headers, params=params)
+        resp.raise_for_status()
+
+        videos = resp.json().get("results", [])
+        # Keep only YouTube
+        yt = [v for v in videos if v.get("site") == "YouTube"]
+
+        # Sort: Trailer → Teaser → Clip → Featurette → Other
+        priority = {"Trailer": 1, "Teaser": 2, "Clip": 3, "Featurette": 4}
+        yt.sort(key=lambda v: priority.get(v.get("type", ""), 99))
+        return yt

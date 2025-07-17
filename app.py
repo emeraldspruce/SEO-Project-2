@@ -70,9 +70,19 @@ def movie_detail(movie_id):
     movie = next((m for m in movies if m["id"] == movie_id), None)
     if movie is None:
         abort(404)
+
     movie["genre_names"] = search_client.genre_ids_to_names(movie.get("genre_ids", []))
     return render_template("movie_detail.html", movie=movie)
 
+@app.route("/movie/<int:movie_id>/videos.json")
+def movie_videos_json(movie_id):
+    videos = search_client.get_movie_videos(movie_id)
+    return {
+      "results": [
+        {"key": v["key"], "name": v["name"], "type": v["type"]}
+        for v in videos
+      ]
+    }
 
 if __name__ == "__main__":
     app.run(debug=True)

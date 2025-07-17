@@ -2,16 +2,72 @@
 
 {% block title %}{{ movie.title }}{% endblock %}
 <!-- store following data in SQL: id (We should use this per username to store movies), adult?, backdrop_path, poster_path, genre_ids (list of genres), original_language, title, overview, release_date, vote_average (rating), vote_count (number of ratings), popularity? -->
-{% block body %}    
-<h1>{{ movie.title }}</h1>
-<p><strong>id:</strong> {{ movie.id }}</p>
-<p><strong>Adult:</strong> {{ movie.adult }}</p>
-<img src="https://image.tmdb.org/t/p/w500{{ movie.backdrop_path }}" alt="n/a" class="image-modal">
-<p><strong>Genres:</strong> {{ movie.genre_names | join(", ") }}</p>
-<p><strong>Language:</strong> {{ movie.original_language }}</p>
-<p><strong>Summary:</strong> {{ movie.overview }}</p>
-<p><strong>Release Date:</strong> {{ movie.release_date }}</p>
-<p><strong>Rating:</strong> {{ movie.vote_average }}</p>
-<p><strong>Number of Ratings:</strong> {{ movie.vote_count }}</p>
-<p><strong>Popularity:</strong> {{ movie.popularity }}</p>
+{% block body %} 
+<div class="movie-detail">
+    <!-- Hero image section with overlay -->
+    <div class="hero-section">
+        <img src="https://image.tmdb.org/t/p/w500{{ movie.backdrop_path }}" alt="{{ movie.title }} backdrop" class="hero-image">
+        <div class="hero-overlay"></div>
+    </div>
+    <!-- Movie content section -->
+    <div class="movie-content">
+        <div class="movie-header">
+            <div class="movie-header-left">
+                <img src="https://image.tmdb.org/t/p/w500{{ movie.poster_path }}" alt="{{ movie.title }} poster" class="poster-image">
+            </div>
+            <div class="movie-header-right">
+                <h1 class="movie-title">{{ movie.title }}</h1>
+                <p class="movie-meta">
+                    <span class="rating">⭐ {{ movie.vote_average }}</span> | 
+                    <span class="release-date">{{ movie.release_date }}</span>
+                </p>
+                <p class="movie-overview">{{ movie.overview }}</p>
+                <script>
+                    document.addEventListener("DOMContentLoaded", async () => {
+                      console.log("Video script running for movie:", {{ movie.id }});  // sanity log
+                
+                      const movieId = {{ movie.id }};
+                      const resp = await fetch(`/movie/${movieId}/videos.json`);
+                      console.log("Fetch resp:", resp.status);
+                      if (!resp.ok) return;
+                
+                      const { results } = await resp.json();
+                      console.log("Video results:", results);
+                      const vid = results.find(v => v.type === "Trailer") || results[0];
+                      if (!vid) {
+                        console.warn("No YouTube videos found for", movieId);
+                        return;
+                      }
+                
+                      const iframe = document.createElement("iframe");
+                      iframe.width  = "560";
+                      iframe.height = "315";
+                      iframe.src    = `https://www.youtube.com/embed/${vid.key}`;
+                      iframe.allow  = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture";
+                      iframe.allowFullscreen = true;
+                
+                      document.getElementById("video-container").appendChild(iframe);
+                    });
+                </script>   
+            </div>
+            <div id="video-container" class="movie-video" style="margin-top: 1.5rem;"></div> 
+        </div>
+        
+        <!-- Additional movie details -->
+        <div class="movie-details">
+            <div class="detail-item">
+                <strong>Genres:</strong> {{ movie.genre_names | join(", ") }}
+            </div>
+            <div class="detail-item">
+                <strong>Language:</strong> {{ movie.original_language }}
+            </div>
+            <div class="detail-item">
+                <strong>Rating:</strong> {{ movie.vote_average }} ({{ movie.vote_count }} votes)
+            </div>
+            <div class="detail-item">
+                <strong>Popularity:</strong> {{ movie.popularity }}
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}

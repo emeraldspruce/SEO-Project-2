@@ -11,12 +11,26 @@
 <body>
     <header>
         <nav class="navbar" id="navbar">
-            <div class="navbar-spacer"></div>
-            <a href="{{ url_for('search') }}" class="nav-link {% if active == 'first' %}active{% endif %}">Search</a>
-            <a href="{{ url_for('my_movies') }}" class="nav-link {% if active == 'my_movies' %}active{% endif %}">Saved Movies</a>
-            <a href="{{ url_for('watched') }}" class="nav-link {% if active == 'watched' %}active{% endif %}">Watched</a>
-            <div class="navbar-spacer"></div>
-            <img src="{{ url_for('static', filename='images/Default-Avatar.png') }}" alt="Profile Pic" style="height:50px;width:50px;border-radius:50%;">
+            <!-- Brand/Logo section -->
+            <div class="navbar-brand">
+                <h2>🎬 Movi</h2>
+            </div>
+            <!-- Navigation links -->
+            <div class="nav-links">
+                <a href="{{ url_for('search') }}" class="nav-link {% if active == 'search' %}active{% endif %}">
+                    Search
+                </a>
+                <a href="{{ url_for('my_movies') }}" class="nav-link {% if active == 'my_movies' %}active{% endif %}">
+                    Saved Movies
+                </a>
+                <a href="{{ url_for('watched') }}" class="nav-link {% if active == 'watched' %}active{% endif %}">
+                    Watched
+                </a>
+            </div>
+            <!-- Profile section -->
+            <div class="navbar-profile">
+                <img src="{{ url_for('static', filename='images/Default-Avatar.png') }}" alt="Profile Picture">
+            </div>
         </nav>
     </header>
 
