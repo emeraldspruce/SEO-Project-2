@@ -5,17 +5,15 @@
 
 {% block body %}
 <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-<h1>Welcome to the Search Page</h1>
 
-<form method="GET" action="/">
+<form method="GET" action="/" class = "search-form">
   <input type="text" name="query" placeholder="Search for a movie..." value="{{ query or '' }}" class = "search-bar">
-  <button type="submit">Search</button>
+  <button type="submit" class="search-button">Search</button>
   
   {% if query %}
-    <button type="button" onclick="window.location.href='{{ url_for('search') }}'">Clear</button>
+    <button  class="clear-button" type="button" onclick="window.location.href='{{ url_for('search') }}'">Clear</button>
   {% endif %}
 </form>
-<hr>
 <h2>{% if query %}Search Results for "{{ query }}"{% else %}Popular Movies{% endif %}</h2>
 <div class="movie-list">
   {% for movie in movies %}
