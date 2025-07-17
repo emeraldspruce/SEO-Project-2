@@ -86,14 +86,6 @@ def my_movies():
     ############################################################## if not movies: #################
     return render_template("my_movies.html", movies=movies)
 
-@app.route("/watched.html")
-def watched():
-    global database
-    database.print_all_users()
-    database.print_all_user_movies(session.get("username"))
-    database.print_all_movies()
-    return render_template("watched.html")
-
 @app.route("/rate_movie/<int:movie_id>", methods=["POST"])
 def rate_movie(movie_id):
     rating = request.form.get("rating")
@@ -117,6 +109,7 @@ def movie_detail(movie_id):
     movie = next((m for m in movies if m["id"] == movie_id), None)
     if movie is None:
         abort(404)
+    movie = dict(movie)
     movie["genre_names"] = search_client.genre_ids_to_names(movie.get("genre_ids", []))
     return render_template("movie_detail.html", movie=movie)
 

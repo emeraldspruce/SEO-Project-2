@@ -42,7 +42,7 @@ class MovieRankerDB:
         CREATE TABLE IF NOT EXISTS user_movies (
             user_id INTEGER,
             movie_id INTEGER,
-            rating INTEGER NOT NULL,
+            rating REAL NOT NULL,
             PRIMARY KEY (user_id, movie_id),
             FOREIGN KEY (user_id) REFERENCES users(id),
             FOREIGN KEY (movie_id) REFERENCES movies(id)
@@ -65,6 +65,7 @@ class MovieRankerDB:
     def add_movie(self, movie_data):
         conn = self.db_connect()
         cursor = conn.cursor()
+        movie_data = dict(movie_data) 
         self.add_genres(movie_data['id'], movie_data.get('genre_ids', []))
         cursor.execute("""
         INSERT OR IGNORE INTO movies (id, backdrop_path, poster_path, original_language, title, overview, release_date, vote_average, vote_count, popularity)
@@ -115,7 +116,7 @@ class MovieRankerDB:
             self.add_genre(movie_id, genre_id)
         conn.close()
 
-    def get_user_movies(self, user_name, sort_by="rating", ascending=False):
+    def get_user_movies(self, id, sort_by="rating", ascending=False):
         conn = self.db_connect()
         cursor = conn.cursor()
         sort_fields = {
@@ -137,11 +138,12 @@ class MovieRankerDB:
             FROM users u
             JOIN user_movies um ON u.id = um.user_id
             JOIN movies m ON um.movie_id = m.id
-            WHERE u.name = ?
+            WHERE u.id = ?
             ORDER BY {sort_column} {order}
-        """, (user_name,))
+        """, (id,))
         results = cursor.fetchall()
         conn.close()
+        print(results)
         return results
         
     def get_movie_data(self, movie_id):
