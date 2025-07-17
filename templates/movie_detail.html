@@ -6,11 +6,9 @@
 <h1>{{ movie.title }}</h1>
 <p><strong>id:</strong> {{ movie.id }}</p>
 <p><strong>Adult:</strong> {{ movie.adult }}</p>
-<p><strong>Backdrop Path:</strong> {{ movie.backdrop_path }}</p>
-<p><strong>Poster Path:</strong> {{ movie.poster_path }}</p>
+<img src="https://image.tmdb.org/t/p/w500{{ movie.backdrop_path }}" alt="n/a" class="image-modal">
 <p><strong>Genres:</strong> {{ movie.genre_names | join(", ") }}</p>
 <p><strong>Language:</strong> {{ movie.original_language }}</p>
-<p><strong>Title:</strong> {{ movie.title }}</p>
 <p><strong>Summary:</strong> {{ movie.overview }}</p>
 <p><strong>Release Date:</strong> {{ movie.release_date }}</p>
 <p><strong>Rating:</strong> {{ movie.vote_average }}</p>

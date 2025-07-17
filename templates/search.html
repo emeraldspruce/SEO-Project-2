@@ -4,24 +4,24 @@
 {% set active = 'search' %}
 
 {% block body %}
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 <h1>Welcome to the Search Page</h1>
 <p>Search for any movie by title.</p>
 
 <form method="GET" action="/">
   <input type="text" name="query" placeholder="Search for a movie..." value="{{ query or '' }}">
   <button type="submit">Search</button>
-  
-  {% if query %}
-    <button type="button" onclick="window.location.href='{{ url_for('search') }}'">Clear</button>
-  {% endif %}
 </form>
 <hr>
 <h2>{% if query %}Search Results for "{{ query }}"{% else %}Popular Movies{% endif %}</h2>
-<ul>
+<div class="movie-list">
   {% for movie in movies %}
-    <li>
-      <a href="{{ url_for('movie_detail', movie_id=movie.id) }}">{{ movie.title }}</a>
-    </li>
+  <div class="individual-cards" onclick="window.location.href='{{ url_for('movie_detail', movie_id=movie.id) }}'">
+    <img src="https://image.tmdb.org/t/p/w500{{ movie.poster_path }}" alt="Movie poster" class="image">
+    <p style="margin-bottom: -10px;">{{ movie.title }}</p>
+    <p class="rating">&#11088; {{ movie.rating }}</p>
+    <button class="like-button">&#128151;</button>
+  </div>
   {% endfor %}
-</ul>
+</div>
 {% endblock %}

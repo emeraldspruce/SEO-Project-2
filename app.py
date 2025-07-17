@@ -20,7 +20,10 @@ def init_app():
     global search_client
 
     api_key = os.getenv("TMDB_API_KEY")
+    print(f"Loaded API key: '{api_key}'")
+
     search_client = TMDBClient(api_key=api_key)
+    print(f"TMDBClient created with key: {search_client.api_key}")
     search_client.fetch_genres()
     # Run the initialization of the database to create tables if they don't exist
     database.init_db()
