@@ -1,7 +1,13 @@
+html {
+    background-color: #090909;
+    min-height: 100vh;
+}
+
 body{
     margin: 0;
     font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
     width: 100%;
+    min-height: 100vh;
     background-color: #090909;
 }
 main{
@@ -573,3 +579,195 @@ input.search-bar {
     box-shadow: 0 4px 12px rgba(255,56,56,0.3);
     transform: translateY(-1px);
   }
+
+  .username{
+    color: #ffffff;
+  }
+
+  /* make the container positioned */
+.navbar-profile {
+    position: relative;
+  }
+  
+  /* hide by default */
+  .dropdown-menu {
+    display: none;
+    position: absolute;
+    top: calc(100% + 0.5rem);
+    right: 0;
+    background: #1a1a1a;
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+    padding: 0.5rem 0;
+    z-index: 2000;
+    min-width: 120px;
+  }
+  
+  /* show when toggled */
+  .dropdown-menu.open {
+    display: block;
+  }
+  
+  /* style the button inside */
+  .dropdown-menu button {
+    width: 100%;
+    background: transparent;
+    border: none;
+    color: #fff;
+    text-align: left;
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  
+  .dropdown-menu button:hover {
+    background: rgba(255, 255, 255, 0.1);
+  }
+  .navbar {
+    overflow: visible;
+  }
+
+  .my-movies-title{
+    color: #ffffff;
+    margin-bottom: 1rem;
+    text-align: center;
+  }
+
+  /* --- Rating Form Container --- */
+.rating-form {
+    background: #1a1a1a;
+    padding: 1rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+    width: 450px;
+    margin-top: 1.5rem;
+  }
+  
+  /* --- Inputs & Button --- */
+  .rating-form label {
+    display: block;
+    color: #ccc;
+    font-size: 0.9rem;
+    margin-bottom: 0.25rem;
+  }
+  
+  .rating-form input[type="number"] {
+    width: 100%;
+    padding: 0.5rem;
+    font-size: 1rem;
+    border: 1px solid #333;
+    border-radius: 6px;
+    background: #090909;
+    color: #fff;
+    margin-bottom: 0.75rem;
+    box-sizing: border-box;
+    transition: border-color 0.2s;
+  }
+  .rating-form input[type="number"]:focus {
+    border-color: #ff3838;
+    outline: none;
+  }
+  
+  /* Make the submit button match your navbar style */
+  .rating-form button {
+    display: block;
+    width: 100%;
+    padding: 0.6rem 0;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #fff;
+    background: linear-gradient(135deg, #ff3838 0%, #ff6b6b 100%);
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: transform 0.1s, box-shadow 0.2s;
+  }
+  .rating-form button:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(255,56,56,0.3);
+  }
+  
+  /* --- Your Rating Display --- */
+  .user-rating {
+    margin-top: 0.75rem;
+    padding: 0.75rem;
+    background: #111;
+    border-left: 4px solid #ff3838;
+    border-radius: 4px;
+    color: #eee;
+  }
+  .user-rating strong {
+    color: #ff6b6b;
+  }
+
+
+  /* --- Login Card Container --- */
+.login-card {
+    background: #1a1a1a;
+    max-width: 360px;
+    margin: 4rem auto;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
+    text-align: center;
+  }
+  
+  /* --- Headings & Text --- */
+  .login-card h2 {
+    color: #fff;
+    margin-bottom: 0.5rem;
+    font-size: 1.75rem;
+  }
+  .login-card p {
+    color: #ccc;
+    margin-bottom: 1.5rem;
+  }
+  
+  /* --- Labels --- */
+  .login-card label {
+    display: block;
+    text-align: left;
+    color: #ccc;
+    font-size: 0.9rem;
+    margin-bottom: 0.25rem;
+  }
+  
+  /* --- Input Field --- */
+  .login-card input[type="text"] {
+    width: 100%;
+    padding: 0.6rem;
+    font-size: 1rem;
+    border: 1px solid #333;
+    border-radius: 6px;
+    background: #090909;
+    color: #fff;
+    box-sizing: border-box;
+    margin-bottom: 1.25rem;
+    transition: border-color 0.2s;
+  }
+  .login-card input[type="text"]:focus {
+    border-color: #ff3838;
+    outline: none;
+  }
+  
+  /* --- Submit Button --- */
+  .login-card button {
+    width: 100%;
+    padding: 0.7rem;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #fff;
+    background: linear-gradient(135deg, #ff3838 0%, #ff6b6b 100%);
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: transform 0.1s, box-shadow 0.2s;
+  }
+  .login-card button:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(255, 56, 56, 0.3);
+  }
+  
+  

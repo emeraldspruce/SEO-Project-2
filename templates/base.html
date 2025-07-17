@@ -25,15 +25,51 @@
               </a>
             </div>
             <!-- Profile section -->
-              {% if session.username %}
-              <span>Welcome, {{ session.username }}!</span>
-                  <a href="{{ url_for('logout') }}" class="nav-link">Logout</a>
-              {% else %}
-                  <a href="{{ url_for('login') }}" class="nav-link">Login</a>
-              {% endif %}
             <div class="navbar-profile">
-              <img src="{{ url_for('static', filename='images/Default-Avatar.png') }}" alt="Profile Pic" style="height:50px;width:50px;border-radius:50%;">
-             </div>
+                {% if session.username %}
+                  <span class="username">{{ session.username }}</span>
+                {% endif %}
+                <!-- add id here -->
+                <img
+                  id="profile-pic"
+                  src="{{ url_for('static', filename='images/Default-Avatar.png') }}"
+                  alt="Profile Pic"
+                  class="avatar"
+                  style="height:50px; width:50px; border-radius:50%; cursor:pointer;"
+                >
+              
+                <!-- move this inside .navbar-profile -->
+                <div id="profile-menu" class="dropdown-menu">
+                  {% if session.username %}
+                    <button onclick="window.location.href='{{ url_for('logout') }}'">
+                      Logout
+                    </button>
+                  {% else %}
+                    <button onclick="window.location.href='{{ url_for('login') }}'">
+                      Login
+                    </button>
+                  {% endif %}
+                </div>
+              </div>
+              <script>
+                document.addEventListener('DOMContentLoaded', () => {
+                  const pic  = document.getElementById('profile-pic');
+                  const menu = document.getElementById('profile-menu');
+              
+                  // toggle on avatar click
+                  pic.addEventListener('click', e => {
+                    e.stopPropagation();
+                    menu.classList.toggle('open');
+                  });
+              
+                  // click anywhere else? close it.
+                  document.addEventListener('click', e => {
+                    if (!menu.contains(e.target)) {
+                      menu.classList.remove('open');
+                    }
+                  });
+                });
+              </script>
         </nav>
     </header>
 

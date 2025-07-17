@@ -93,7 +93,7 @@ def my_movies():
 def rate_movie(movie_id):
     rating = request.form.get("rating")
     if rating and session.get("user_id") is not None:
-        print(f"id: {session["user_id"]}, movie_id: {movie_id}, rating: {rating}")
+        print(f"id: {session['user_id']}, movie_id: {movie_id}, rating: {rating}")
         global movies
         movie = next((m for m in movies if m["id"] == movie_id), None)
         database.add_movie(movie)
@@ -128,6 +128,7 @@ def movie_detail(movie_id):
         if user_movie and rating:
             movie["rating"] = rating
     return render_template("movie_detail.html", movie=movie)
+
 
 @app.route("/movie/<int:movie_id>/videos.json")
 def movie_videos_json(movie_id):
