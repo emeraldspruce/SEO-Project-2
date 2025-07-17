@@ -84,7 +84,7 @@ def my_movies():
     global movies
     movies = database.get_user_movies(session.get("user_id"))
     ############################################################## if not movies: #################
-    return render_template("my_movies.html", movies=movies)
+    return render_template("my_movies.html", movies=movies, user_name=session.get("username"))
 
 @app.route("/rate_movie/<int:movie_id>", methods=["POST"])
 def rate_movie(movie_id):
@@ -111,6 +111,19 @@ def movie_detail(movie_id):
         abort(404)
     movie = dict(movie)
     movie["genre_names"] = search_client.genre_ids_to_names(movie.get("genre_ids", []))
+    if session.get("user_id") is not None:
+        user_movies = database.get_user_movies(session["user_id"])
+        user_movie = None
+        for um in user_movies:
+            if um["id"] == movie["id"]:
+                user_movie = um
+                break
+        try:
+            rating = user_movie["rating"]
+        except TypeError:
+            rating = None
+        if user_movie and rating:
+            movie["rating"] = rating
     return render_template("movie_detail.html", movie=movie)
 
 

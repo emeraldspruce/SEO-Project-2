@@ -14,7 +14,6 @@
             <div class="navbar-spacer"></div>
             <a href="{{ url_for('search') }}" class="nav-link {% if active == 'first' %}active{% endif %}">Search</a>
             <a href="{{ url_for('my_movies') }}" class="nav-link {% if active == 'my_movies' %}active{% endif %}">Saved Movies</a>
-            <a href="{{ url_for('watched') }}" class="nav-link {% if active == 'watched' %}active{% endif %}">Watched</a>
             <div class="navbar-spacer"></div>
 
             {% if session.username %}

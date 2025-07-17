@@ -5,7 +5,9 @@
 
 {% block body %}
 <h1>Welcome to the Movies Page</h1>
-<p>This is the content of the second page.</p>
+{% if not user_name %}<p>You need to login to view saved movies</p>
+{% elif not movies %}<p>No movies saved.</p>
+{% endif %}
 <ul>
   {% for movie in movies %}
     <li>

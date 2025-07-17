@@ -130,7 +130,7 @@ class MovieRankerDB:
 
         sort_column = sort_fields.get(sort_by)
         if not sort_column:
-            raise ValueError(f"Invalid sort field '{sort_by}'. Must be one of: {', '.join(valid_sort_fields)}")
+            raise ValueError(f"Invalid sort field '{sort_by}'. Must be one of: {', '.join(sort_fields)}")
 
         order = "ASC" if ascending else "DESC"
         cursor.execute(f"""
