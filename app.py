@@ -1,4 +1,4 @@
-from flask import Flask, render_template, abort, request
+from flask import Flask, render_template, abort, request, session, redirect, url_for
 from dotenv import load_dotenv
 from search import TMDBClient
 import database
@@ -9,6 +9,7 @@ import sqlite3
 
 
 app = Flask(__name__)
+app.secret_key = os.urandom(24)
 load_dotenv()
 
 search_client = None
@@ -37,6 +38,21 @@ def add_movie(user_id,imdb_id,rating,title):
     ''', (user_id, imdb_id, rating, title))
     conn.commit()
 
+def db_connect():
+    conn = sqlite3.connect('movie_ranker.db')
+    conn.row_factory = sqlite3.Row
+    return conn
+
+def get_or_make_user(username):
+    conn = db_connect()
+    user = conn.execute('SELECT * FROM users WHERE username = ?', (username,)).fetchone()
+    if user is None:
+        conn.execute('INSERT INTO users (username) VALUES (?)', (username,))
+        conn.commit()
+        user = conn.execute('SELECT * FROM users WHERE username = ?', (username,)).fetchone()
+    conn.close()
+    return user
+
 @app.route("/")
 def search():
     global movies
@@ -47,6 +63,22 @@ def search():
         movies = search_client.discover_movies()
     return render_template("search.html", movies=movies, query=query)
 
+@app.route("/login", methods=["GET","POST"])
+def login():
+    if request.method == "POST":
+        username = request.form['username']
+        if not username:
+            return "Username is required", 400
+        user = get_or_make_user(username)
+        session["user_id"] = user['id']
+        session["username"] = user['username']
+        return redirect(url_for("search"))
+    return render_template("login.html")
+
+@app.route("/logout")
+def logout():
+    session.clear()
+    return redirect(url_for("search"))
 
 @app.route("/my_movies.html")
 def my_movies():
@@ -59,6 +91,12 @@ def my_movies():
 def watched():
     return render_template("watched.html")
 
+@app.route("/rate_movie/<int:movie_id>", methods=["POST"])
+def rate_movie(movie_id):
+    rating = request.form.get("rating")
+    if rating:
+        add_movie(user_id=1, imdb_id=movie_id, rating=rating, title=movie_title)
+    return redirect(url_for("movie_detail", movie_id=movie_id))
 
 @app.route("/movie/<int:movie_id>")
 def movie_detail(movie_id):
