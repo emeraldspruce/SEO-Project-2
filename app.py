@@ -42,18 +42,13 @@ def add_movie(user_id,imdb_id,rating,title):
     ''', (user_id, imdb_id, rating, title))
     conn.commit()
 
-def db_connect():
-    conn = sqlite3.connect('movie_ranker.db')
-    conn.row_factory = sqlite3.Row
-    return conn
-
 def get_or_make_user(username):
-    conn = db_connect()
-    user = conn.execute('SELECT * FROM users WHERE username = ?', (username,)).fetchone()
+    conn = database.db_connect()
+    user = conn.execute('SELECT * FROM users WHERE name = ?', (username,)).fetchone()
     if user is None:
-        conn.execute('INSERT INTO users (username) VALUES (?)', (username,))
+        conn.execute('INSERT INTO users (name) VALUES (?)', (username,))
         conn.commit()
-        user = conn.execute('SELECT * FROM users WHERE username = ?', (username,)).fetchone()
+        user = conn.execute('SELECT * FROM users WHERE name = ?', (username,)).fetchone()
     conn.close()
     return user
 
@@ -75,7 +70,7 @@ def login():
             return "Username is required", 400
         user = get_or_make_user(username)
         session["user_id"] = user['id']
-        session["username"] = user['username']
+        session["username"] = user['name']
         return redirect(url_for("search"))
     return render_template("login.html")
 
@@ -87,20 +82,32 @@ def logout():
 @app.route("/my_movies.html")
 def my_movies():
     global movies
-    movies = search_client.search_movies(title="Batman")
+    movies = database.get_user_movies(session.get("user_id"))
+    ############################################################## if not movies: #################
     return render_template("my_movies.html", movies=movies)
-
 
 @app.route("/watched.html")
 def watched():
     global database
+    database.print_all_users()
+    database.print_all_user_movies(session.get("username"))
+    database.print_all_movies()
     return render_template("watched.html")
 
 @app.route("/rate_movie/<int:movie_id>", methods=["POST"])
 def rate_movie(movie_id):
     rating = request.form.get("rating")
-    if rating:
-        add_movie(user_id=1, imdb_id=movie_id, rating=rating, title=movie_title)
+    if rating and session.get("user_id") is not None:
+        print(f"id: {session["user_id"]}, movie_id: {movie_id}, rating: {rating}")
+        global movies
+        movie = next((m for m in movies if m["id"] == movie_id), None)
+        database.add_movie(movie)
+        database.add_user_movies_by_id(session["user_id"], movie_id, rating)
+    elif rating:
+        print("Not logged in")
+        return redirect(url_for("login"))
+    else:
+        print("No rating provided")
     return redirect(url_for("movie_detail", movie_id=movie_id))
 
 @app.route("/movie/<int:movie_id>")
