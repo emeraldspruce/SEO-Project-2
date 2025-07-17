@@ -86,7 +86,6 @@ def logout():
 def my_movies():
     global movies
     movies = database.get_user_movies(session.get("user_id"))
-    ############################################################## if not movies: #################
     return render_template("my_movies.html", movies=movies, user_name=session.get("username"))
 
 @app.route("/rate_movie/<int:movie_id>", methods=["POST"])
