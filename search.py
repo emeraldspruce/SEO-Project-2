@@ -15,9 +15,9 @@ class TMDBClient:
         self.language = language
         self.include_adult = str(include_adult).lower()
         self.base_url = "https://api.themoviedb.org/3"
+        # Remove Bearer token, use simple headers
         self.headers = {
-            "accept": "application/json",
-            "Authorization": f"Bearer {self.api_key}"
+            "accept": "application/json"
         }
         self.fetch_genres()
 
@@ -27,7 +27,8 @@ class TMDBClient:
         query = quote(title)
         results = []
 
-        url = f"{self.base_url}/search/movie?query={query}&include_adult={self.include_adult}&language={self.language}&page={page}"
+        # Add api_key to URL
+        url = f"{self.base_url}/search/movie?api_key={self.api_key}&query={query}&include_adult={self.include_adult}&language={self.language}&page={page}"
         if year:
             url += f"&year={year}"
 
@@ -47,7 +48,7 @@ class TMDBClient:
         if get_all_pages:
             page += 1
             while page <= total_pages and len(results) < max_results:
-                url = f"{self.base_url}/search/movie?query={query}&include_adult={self.include_adult}&language={self.language}&page={page}"
+                url = f"{self.base_url}/search/movie?api_key={self.api_key}&query={query}&include_adult={self.include_adult}&language={self.language}&page={page}"
                 if year:
                     url += f"&year={year}"
 
@@ -65,8 +66,8 @@ class TMDBClient:
 
 
     def discover_movies(self, sort_by="popularity.desc", year=None, page=1):
-        '''Used TMDB's discover endpoint to get a list of current poopular movies.'''
-        url = f"{self.base_url}/discover/movie?sort_by={sort_by}&include_adult={self.include_adult}&language={self.language}&page={page}"
+        '''Used TMDB's discover endpoint to get a list of current popular movies.'''
+        url = f"{self.base_url}/discover/movie?api_key={self.api_key}&sort_by={sort_by}&include_adult={self.include_adult}&language={self.language}&page={page}"
         if year is not None:
             url += f"&primary_release_year={year}"
         response = requests.get(url, headers=self.headers)
@@ -82,7 +83,7 @@ class TMDBClient:
 
     def fetch_genres(self):
         '''Fetches the list of movie genres from TMDB and stores them in a dictionary.'''
-        url = f"{self.base_url}/genre/movie/list?language={self.language}"
+        url = f"{self.base_url}/genre/movie/list?api_key={self.api_key}&language={self.language}"
         response = requests.get(url, headers=self.headers)
         self.genre_map = {}
 
@@ -105,3 +106,22 @@ class TMDBClient:
         with open(filename, "w") as file:
             json.dump(results, file, indent=2)
         print(f"Saved {len(results)} results to {filename}")
+    
+    def get_movie_videos(self, movie_id: int) -> list[dict]:
+        """
+        Fetch YouTube video data (trailers, teasers, etc.) for a specific movie
+        from TMDb, then sort by our type preference.
+        """
+        url = f"{self.base_url}/movie/{movie_id}/videos"
+        params = {"api_key": self.api_key, "language": self.language}
+        resp = requests.get(url, headers=self.headers, params=params)
+        resp.raise_for_status()
+
+        videos = resp.json().get("results", [])
+        # Keep only YouTube
+        yt = [v for v in videos if v.get("site") == "YouTube"]
+
+        # Sort: Trailer → Teaser → Clip → Featurette → Other
+        priority = {"Trailer": 1, "Teaser": 2, "Clip": 3, "Featurette": 4}
+        yt.sort(key=lambda v: priority.get(v.get("type", ""), 99))
+        return yt

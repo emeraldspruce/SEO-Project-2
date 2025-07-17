@@ -25,7 +25,10 @@ def init_app():
 
     # Initialize the TMDB client with the API key from environment variables
     api_key = os.getenv("TMDB_API_KEY")
+    print(f"Loaded API key: '{api_key}'")
+
     search_client = TMDBClient(api_key=api_key)
+    print(f"TMDBClient created with key: {search_client.api_key}")
     search_client.fetch_genres()
     # Run the initialization of the database to create tables if they don't exist
     database.init_db()
@@ -109,7 +112,7 @@ def movie_detail(movie_id):
     movie = next((m for m in movies if m["id"] == movie_id), None)
     if movie is None:
         abort(404)
-    movie = dict(movie)
+        
     movie["genre_names"] = search_client.genre_ids_to_names(movie.get("genre_ids", []))
     if session.get("user_id") is not None:
         user_movies = database.get_user_movies(session["user_id"])
@@ -126,6 +129,15 @@ def movie_detail(movie_id):
             movie["rating"] = rating
     return render_template("movie_detail.html", movie=movie)
 
+@app.route("/movie/<int:movie_id>/videos.json")
+def movie_videos_json(movie_id):
+    videos = search_client.get_movie_videos(movie_id)
+    return {
+      "results": [
+        {"key": v["key"], "name": v["name"], "type": v["type"]}
+        for v in videos
+      ]
+    }
 
 if __name__ == "__main__":
     app.run(debug=True)
