@@ -112,7 +112,7 @@ def movie_detail(movie_id):
     movie = next((m for m in movies if m["id"] == movie_id), None)
     if movie is None:
         abort(404)
-        
+    movie = dict(movie)
     movie["genre_names"] = search_client.genre_ids_to_names(movie.get("genre_ids", []))
     if session.get("user_id") is not None:
         user_movies = database.get_user_movies(session["user_id"])
