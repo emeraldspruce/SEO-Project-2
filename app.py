@@ -15,6 +15,7 @@ load_dotenv()
 search_client = None
 movies = []
 
+# PR
 
 # Run once at the start to fetch data from TMDB API
 def init_app():
